@@ -1,46 +1,354 @@
-<div class="footer">
-        &copy; 2026 Aplikasi Sekolahku. Dikembangkan untuk tata kelola pendidikan yang lebih baik.
-    </div>
-
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBIwS3TfnomxPq6bw3173OVzwD_gvJ-qsg",
-  authDomain: "sekolahku-a2cf6.firebaseapp.com",
-  projectId: "sekolahku-a2cf6",
-  storageBucket: "sekolahku-a2cf6.firebasestorage.app",
-  messagingSenderId: "285921284769",
-  appId: "1:285921284769:web:f2042b5bd2647d8989d6e0",
-  measurementId: "G-0NB6100FEY"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-        // Contoh fungsi sederhana: Menyimpan data ke Firebase Firestore
-        // (Nanti fungsi ini bisa disambungkan ke tombol "Simpan Siswa Baru")
-        async function tambahDataSiswa() {
-            try {
-                const docRef = await addDoc(collection(db, "siswa"), {
-                    nama: "Budi Santoso",
-                    kelas: "10-A",
-                    status: "Aktif"
-                });
-                console.log("Data berhasil disimpan dengan ID: ", docRef.id);
-            } catch (e) {
-                console.error("Gagal menyimpan data: ", e);
-            }
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aplikasi Sekolahku - Sistem Informasi Terpadu</title>
+    
+    <!-- Menggunakan font dari Google sesuai kode asli -->
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700|Lato:400,300,400italic,900,700&display=swap' type='text/css' media='all' />
+    <!-- Menggunakan FontAwesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        /* CSS yang meniru tata letak Tema Newsium dari kode asli Anda */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            background-color: #f1f1f1;
+            color: #333;
+        }
+        a { text-decoration: none; color: inherit; }
+        
+        /* Header Style 1 (Sesuai inline CSS asli) */
+        .main-header {
+            background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1500&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            padding: 40px 20px;
+        }
+        .main-header::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6); /* Overlay gelap agar teks terbaca */
+        }
+        .container-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .site-branding { padding: 20px 0; }
+        .site-title {
+            font-family: 'Lato', sans-serif;
+            font-size: 35px;
+            font-weight: 900;
+            margin: 0 0 10px 0;
+            color: #dd8a0d; /* Warna dari kode asli */
+            text-transform: uppercase;
+        }
+        .site-description {
+            color: #dd8a0d;
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0;
         }
 
-        // Anda bisa memanggil fungsi di atas saat tombol di-klik
+        /* Navigasi / Menu */
+        .header-menu-part {
+            background-color: #222;
+            border-bottom: 3px solid #dd8a0d;
+        }
+        .main-navigation ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .main-navigation ul li a {
+            display: block;
+            padding: 15px 20px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            transition: background 0.3s;
+        }
+        .main-navigation ul li a:hover {
+            background-color: #dd8a0d;
+        }
+        .aft-home-icon {
+            background-color: #dd8a0d;
+            color: #fff;
+            padding: 15px 20px;
+            display: inline-block;
+        }
+
+        /* Layout Konten Utama (Kiri 70%, Kanan 30%) */
+        .content-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .site-main {
+            flex: 0 0 calc(70% - 30px);
+        }
+        .sidebar-area {
+            flex: 0 0 30%;
+        }
+
+        @media (max-width: 768px) {
+            .site-main, .sidebar-area { flex: 0 0 100%; }
+        }
+
+        /* Artikel / Post Style (Gambar Kiri, Teks Kanan) */
+        .archive-list-post {
+            background: #fff;
+            margin-bottom: 30px;
+            display: flex;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .read-img {
+            flex: 0 0 40%;
+        }
+        .read-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .read-details {
+            flex: 0 0 60%;
+            padding: 25px;
+        }
+        .read-categories a {
+            background: #dd8a0d;
+            color: #fff;
+            padding: 3px 10px;
+            font-size: 12px;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+        .read-title h4 {
+            font-size: 22px;
+            margin: 15px 0;
+            font-family: 'Lato', sans-serif;
+        }
+        .read-title h4 a { color: #222; }
+        .read-title h4 a:hover { color: #dd8a0d; }
+        .post-description p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        /* Sidebar Widget */
+        .widget {
+            background: #fff;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .widget-title {
+            font-size: 18px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .widget-title::after {
+            content: "";
+            position: absolute;
+            left: 0; bottom: -2px;
+            width: 50px;
+            height: 2px;
+            background: #dd8a0d;
+        }
+        .search-form input[type="search"] {
+            width: calc(100% - 80px);
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .search-form input[type="submit"] {
+            width: 70px;
+            padding: 10px;
+            background: #222;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .widget_nav_menu ul {
+            list-style: none;
+            padding: 0; margin: 0;
+        }
+        .widget_nav_menu ul li {
+            border-bottom: 1px dashed #eee;
+            padding: 10px 0;
+        }
+        .widget_nav_menu ul li:last-child { border-bottom: none; }
+        .widget_nav_menu ul li a:hover { color: #dd8a0d; }
+
+        /* Footer */
+        .site-info {
+            background: #111;
+            color: #aaa;
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body class="archive default-content-layout">
+
+    <header id="masthead" class="header-style1">
+        <div class="main-header">
+            <div class="container-wrapper">
+                <div class="site-branding">
+                    <p class="site-title"><a href="#">Aplikasi Sekolahku</a></p>
+                    <p class="site-description">Sistem Informasi Manajemen Terintegrasi untuk Sekolah, Madrasah, dan Yayasan Pendidikan. Mudah, Cepat, dan Akurat.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="header-menu-part">
+            <div class="container-wrapper">
+                <nav class="main-navigation">
+                    <ul>
+                        <li><a href="#" class="aft-home-icon"><i class="fa fa-home"></i></a></li>
+                        <li><a href="#">Beranda</a></li>
+                        <li><a href="#">Modul Akademik</a></li>
+                        <li><a href="#">Keuangan & SPP</a></li>
+                        <li><a href="#">Kepegawaian</a></li>
+                        <li><a href="#">PPDB Online</a></li>
+                        <li><a href="#">E-Rapor</a></li>
+                        <li><a href="#">Kontak Kami</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div id="content" class="content-area">
+        <main id="main" class="site-main">
+            <header class="header-title-wrapper1">
+                <h1 style="border-left: 4px solid #dd8a0d; padding-left: 15px;">Daftar Modul Aplikasi Terlengkap</h1>
+            </header>
+
+            <article class="archive-list-post">
+                <div class="read-img">
+                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=800&auto=format&fit=crop" alt="Akademik">
+                </div>
+                <div class="read-details">
+                    <div class="read-categories">
+                        <a href="#">1. e-SCHOOL (Akademik)</a>
+                    </div>
+                    <div class="read-title">
+                        <h4><a href="#">e-School: Aplikasi Sekolah & Madrasah Terintegrasi</a></h4>
+                    </div>
+                    <div class="post-description">
+                        <p>GAMBARAN UMUM: Modul utama yang menangani data siswa, jadwal pelajaran, kehadiran murid dan guru secara realtime, hingga pencetakan kartu ujian otomatis. Semua terintegrasi dalam satu *dashboard* cerdas.</p>
+                    </div>
+                </div>
+            </article>
+
+            <article class="archive-list-post">
+                <div class="read-img">
+                    <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=800&auto=format&fit=crop" alt="Keuangan">
+                </div>
+                <div class="read-details">
+                    <div class="read-categories">
+                        <a href="#">2. SIMKU (Keuangan)</a>
+                    </div>
+                    <div class="read-title">
+                        <h4><a href="#">Sistem Informasi Manajemen Keuangan & Pembayaran SPP</a></h4>
+                    </div>
+                    <div class="post-description">
+                        <p>Kelola seluruh arus kas sekolah, pembayaran SPP bulanan, uang gedung, hingga penyusunan Rencana Anggaran Belanja (RAB) sekolah secara transparan dan akuntabel. Dilengkapi fitur notifikasi tagihan ke WhatsApp orang tua.</p>
+                    </div>
+                </div>
+            </article>
+        </main>
+
+        <div id="secondary" class="sidebar-area">
+            <aside class="widget widget_search">
+                <h2 class="widget-title">Pencarian</h2>
+                <form class="search-form">
+                    <label>
+                        <input type="search" placeholder="Cari modul atau fitur..." />
+                    </label>
+                    <input type="submit" value="Cari" />
+                </form>
+            </aside>
+
+            <aside class="widget widget_nav_menu">
+                <h2 class="widget-title">Menu Cepat Admin</h2>
+                <ul>
+                    <li><a href="#"><i class="fas fa-user-plus"></i> Pendaftaran Siswa Baru (PPDB)</a></li>
+                    <li><a href="#"><i class="fas fa-clipboard-list"></i> Rekap Absensi Harian</a></li>
+                    <li><a href="#"><i class="fas fa-file-invoice-dollar"></i> Cetak Laporan Keuangan</a></li>
+                    <li><a href="#"><i class="fas fa-book-open"></i> Manajemen Kurikulum Merdeka</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Pengaturan Aplikasi</a></li>
+                </ul>
+            </aside>
+            
+            <aside class="widget">
+                <h2 class="widget-title">Statistik Sekolah</h2>
+                <div style="background: #f9f9f9; padding: 15px; border-left: 3px solid #dd8a0d;">
+                    <p style="margin:0 0 10px 0;"><strong>Total Siswa Aktif:</strong> 850</p>
+                    <p style="margin:0 0 10px 0;"><strong>Total Guru & Staf:</strong> 45</p>
+                    <p style="margin:0;"><strong>Tahun Ajaran:</strong> 2026/2027</p>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <footer class="site-info">
+        <div class="container-wrapper">
+            Copyright &copy; 2026 "Tim Sekolahku" | Dikembangkan menggunakan arsitektur Vercel & Firebase.
+        </div>
+    </footer>
+
+    <!-- SCRIPT FIREBASE -->
+    <script type="module">
+        // Import fungsi-fungsi dasar Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // Konfigurasi Firebase Anda (Dapatkan dari console.firebase.google.com)
+        const firebaseConfig = {
+            apiKey: "KODE_API_ANDA_DISINI",
+            authDomain: "sekolahku-app.firebaseapp.com",
+            projectId: "sekolahku-app",
+            storageBucket: "sekolahku-app.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
+        // Inisialisasi Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Contoh fungsi yang akan kita gunakan nanti untuk menambah data
+        window.tambahSiswaDummy = async function() {
+            try {
+                const docRef = await addDoc(collection(db, "siswa"), {
+                    nama: "Siswa Pendaftar Baru",
+                    tanggal: new Date()
+                });
+                alert("Berhasil tes koneksi Firebase! ID: " + docRef.id);
+            } catch (e) {
+                console.error("Gagal konek ke database: ", e);
+            }
+        };
     </script>
+
 </body>
 </html>
