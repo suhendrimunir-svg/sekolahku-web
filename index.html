@@ -204,6 +204,25 @@
             padding: 20px;
             font-size: 14px;
         }
+
+        /* --- TAMBAHAN FITUR: DESAIN POPUP MODAL --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: #fff; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px;
+            position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .modal-close {
+            position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: #666;
+        }
+        .modal-close:hover { color: #d9534f; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn-submit { background: #dd8a0d; color: white; border: none; padding: 12px 20px; cursor: pointer; border-radius: 4px; width: 100%; font-size: 16px; font-weight: bold; }
+        .btn-submit:hover { background: #b87309; }
     </style>
 </head>
 <body class="archive default-content-layout">
@@ -280,7 +299,8 @@
         <div id="secondary" class="sidebar-area">
             <aside class="widget widget_search">
                 <h2 class="widget-title">Pencarian</h2>
-                <form class="search-form">
+                <!-- TAMBAHAN: Mencegah error saat klik tombol cari -->
+                <form class="search-form" onsubmit="event.preventDefault(); alert('Fitur pencarian sedang dihubungkan ke database!');">
                     <label>
                         <input type="search" placeholder="Cari modul atau fitur..." />
                     </label>
@@ -291,11 +311,12 @@
             <aside class="widget widget_nav_menu">
                 <h2 class="widget-title">Menu Cepat Admin</h2>
                 <ul>
-                    <li><a href="#"><i class="fas fa-user-plus"></i> Pendaftaran Siswa Baru (PPDB)</a></li>
-                    <li><a href="#"><i class="fas fa-clipboard-list"></i> Rekap Absensi Harian</a></li>
-                    <li><a href="#"><i class="fas fa-file-invoice-dollar"></i> Cetak Laporan Keuangan</a></li>
-                    <li><a href="#"><i class="fas fa-book-open"></i> Manajemen Kurikulum Merdeka</a></li>
-                    <li><a href="#"><i class="fas fa-cog"></i> Pengaturan Aplikasi</a></li>
+                    <!-- TAMBAHAN: Memberi ID dan fungsi klik agar menu berfungsi -->
+                    <li><a href="#" id="btn-ppdb"><i class="fas fa-user-plus"></i> Pendaftaran Siswa Baru (PPDB)</a></li>
+                    <li><a href="#" onclick="alert('Fitur Rekap Absensi sedang dikembangkan.')"><i class="fas fa-clipboard-list"></i> Rekap Absensi Harian</a></li>
+                    <li><a href="#" onclick="alert('Fitur Cetak Laporan sedang dikembangkan.')"><i class="fas fa-file-invoice-dollar"></i> Cetak Laporan Keuangan</a></li>
+                    <li><a href="#" onclick="alert('Fitur Kurikulum sedang dikembangkan.')"><i class="fas fa-book-open"></i> Manajemen Kurikulum Merdeka</a></li>
+                    <li><a href="#" onclick="alert('Pengaturan Aplikasi belum aktif.')"><i class="fas fa-cog"></i> Pengaturan Aplikasi</a></li>
                 </ul>
             </aside>
             
@@ -316,9 +337,28 @@
         </div>
     </footer>
 
-    <!-- SCRIPT FIREBASE -->
+    <!-- --- TAMBAHAN FITUR: KOTAK POPUP FORMULIR (Sembunyi secara default) --- -->
+    <div id="ppdbModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" id="closeModal">&times;</span>
+            <h2 style="margin-top: 0; color: #dd8a0d; border-bottom: 2px solid #eee; padding-bottom: 10px;">Formulir PPDB</h2>
+            <form id="form-ppdb">
+                <div class="form-group">
+                    <label for="namaSiswa">Nama Lengkap Siswa</label>
+                    <input type="text" id="namaSiswa" required placeholder="Masukkan nama lengkap siswa">
+                </div>
+                <div class="form-group">
+                    <label for="asalSekolah">Asal Sekolah</label>
+                    <input type="text" id="asalSekolah" required placeholder="Contoh: SMP Negeri 1">
+                </div>
+                <button type="submit" class="btn-submit">Simpan Data Pendaftaran</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SCRIPT FIREBASE & LOGIKA APLIKASI -->
     <script type="module">
-        // Import the functions you need from the SDKs you need
+       // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -339,20 +379,69 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+        // --- MULAI LOGIKA APLIKASI ---
 
-        // Contoh fungsi yang akan kita gunakan nanti untuk menambah data
-        window.tambahSiswaDummy = async function() {
-            try {
-                const docRef = await addDoc(collection(db, "siswa"), {
-                    nama: "Siswa Pendaftar Baru",
-                    tanggal: new Date()
-                });
-                alert("Berhasil tes koneksi Firebase! ID: " + docRef.id);
-            } catch (e) {
-                console.error("Gagal konek ke database: ", e);
+        // 1. Logika untuk memunculkan Popup Formulir
+        const modal = document.getElementById("ppdbModal");
+        const btnPpdb = document.getElementById("btn-ppdb");
+        const spanClose = document.getElementById("closeModal");
+
+        // Saat menu "Pendaftaran Siswa Baru" diklik
+        btnPpdb.onclick = function(e) {
+            e.preventDefault();
+            modal.style.display = "flex";
+        }
+
+        // Saat ikon (X) diklik, tutup formulir
+        spanClose.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Tutup otomatis jika klik di luar area kotak putih
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
             }
-        };
-    </script>
+        }
 
+        // 2. Logika Menyimpan Data dari Formulir ke Database Firebase
+        const formPpdb = document.getElementById("form-ppdb");
+        formPpdb.addEventListener("submit", async function(e) {
+            e.preventDefault(); // Mencegah web ter-refresh saat klik tombol simpan
+            
+            // Ambil data yang diketik
+            const nama = document.getElementById("namaSiswa").value;
+            const asal = document.getElementById("asalSekolah").value;
+            const btnSubmit = formPpdb.querySelector(".btn-submit");
+            
+            // Beri efek loading di tombol
+            btnSubmit.textContent = "Menyimpan ke Database...";
+            btnSubmit.style.background = "#999";
+            btnSubmit.disabled = true;
+
+            try {
+                // Perintah mengirim data ke Firestore di Firebase
+                const docRef = await addDoc(collection(db, "siswa_baru"), {
+                    nama_lengkap: nama,
+                    asal_sekolah: asal,
+                    tanggal_daftar: new Date()
+                });
+                
+                alert("Sukses! Pendaftaran berhasil disimpan ke database Firebase.\nID Siswa: " + docRef.id);
+                
+                // Bersihkan formulir dan tutup popup
+                formPpdb.reset();
+                modal.style.display = "none";
+            } catch (error) {
+                console.error("Error Firebase: ", error);
+                alert("Gagal menyimpan data! Pastikan Anda sudah memasukkan KODE_API dari Firebase di kode script.");
+            } finally {
+                // Kembalikan tombol ke keadaan semula
+                btnSubmit.textContent = "Simpan Data Pendaftaran";
+                btnSubmit.style.background = "#dd8a0d";
+                btnSubmit.disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
