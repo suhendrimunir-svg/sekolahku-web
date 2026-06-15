@@ -21,9 +21,5 @@ const firebaseConfig = {
   measurementId: "G-0NB6100FEY"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
 // Initialize Cloud Firestore dan export agar bisa dipakai di file lain
 export const db = getFirestore(app);
