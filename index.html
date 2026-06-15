@@ -443,26 +443,39 @@ const analytics = getAnalytics(app);
             }
         });
     </script>
-    <!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Sekolahku</title>
-</head>
-<body>
-
-    <h2>Formulir Input Data Sekolah</h2>
-
+    <h2 style="margin-top: 30px;">Formulir Input Data Sekolah</h2>
     <form id="form-sekolah">
         <input type="text" id="nama-sekolah" placeholder="Nama Sekolah" required>
         <input type="text" id="alamat-sekolah" placeholder="Alamat Sekolah" required>
-        <button type="submit">Simpan Data</button>
+        <button type="submit" style="background: #dd8a0d; color: white; border: none; padding: 10px;">Simpan Data Sekolah</button>
     </form>
 
     <script type="module" src="js/js/sekolah.js"></script>
 
 </body>
 </html>
+<html lang="id">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    ... (dan seterusnya sampai baris paling bawah) ...
+    } finally {
+            // Kembalikan tombol ke keadaan semula
+            btnSubmit.textContent = "Simpan Data Pendaftaran";
+            btnSubmit.style.background = "#dd8a0d";
+            btnSubmit.disabled = false;
+        }
+    });
+</script>
+
+<h2>Formulir Input Data Sekolah</h2>
+<form id="form-sekolah">
+    <input type="text" id="nama-sekolah" placeholder="Nama Sekolah" required>
+    <input type="text" id="alamat-sekolah" placeholder="Alamat Sekolah" required>
+    <button type="submit">Simpan Data</button>
+</form>
+
+<script type="module" src="js/js/sekolah.js"></script>
+
 </body>
 </html>
