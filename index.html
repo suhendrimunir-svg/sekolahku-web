@@ -1,481 +1,128 @@
-<!doctype html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aplikasi Sekolahku - Sistem Informasi Terpadu</title>
-    
-    <!-- Menggunakan font dari Google sesuai kode asli -->
-    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700|Lato:400,300,400italic,900,700&display=swap' type='text/css' media='all' />
-    <!-- Menggunakan FontAwesome untuk Ikon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    
-    <style>
-        /* CSS yang meniru tata letak Tema Newsium dari kode asli Anda */
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            background-color: #f1f1f1;
-            color: #333;
-        }
-        a { text-decoration: none; color: inherit; }
-        
-        /* Header Style 1 (Sesuai inline CSS asli) */
-        .main-header {
-            background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1500&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            padding: 40px 20px;
-        }
-        .main-header::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.6); /* Overlay gelap agar teks terbaca */
-        }
-        .container-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-        .site-branding { padding: 20px 0; }
-        .site-title {
-            font-family: 'Lato', sans-serif;
-            font-size: 35px;
-            font-weight: 900;
-            margin: 0 0 10px 0;
-            color: #dd8a0d; /* Warna dari kode asli */
-            text-transform: uppercase;
-        }
-        .site-description {
-            color: #dd8a0d;
-            font-size: 16px;
-            max-width: 600px;
-            margin: 0;
-        }
-
-        /* Navigasi / Menu */
-        .header-menu-part {
-            background-color: #222;
-            border-bottom: 3px solid #dd8a0d;
-        }
-        .main-navigation ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .main-navigation ul li a {
-            display: block;
-            padding: 15px 20px;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 500;
-            text-transform: uppercase;
-            transition: background 0.3s;
-        }
-        .main-navigation ul li a:hover {
-            background-color: #dd8a0d;
-        }
-        .aft-home-icon {
-            background-color: #dd8a0d;
-            color: #fff;
-            padding: 15px 20px;
-            display: inline-block;
-        }
-
-        /* Layout Konten Utama (Kiri 70%, Kanan 30%) */
-        .content-area {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            padding: 40px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .site-main {
-            flex: 0 0 calc(70% - 30px);
-        }
-        .sidebar-area {
-            flex: 0 0 30%;
-        }
-
-        @media (max-width: 768px) {
-            .site-main, .sidebar-area { flex: 0 0 100%; }
-        }
-
-        /* Artikel / Post Style (Gambar Kiri, Teks Kanan) */
-        .archive-list-post {
-            background: #fff;
-            margin-bottom: 30px;
-            display: flex;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            overflow: hidden;
-        }
-        .read-img {
-            flex: 0 0 40%;
-        }
-        .read-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-        .read-details {
-            flex: 0 0 60%;
-            padding: 25px;
-        }
-        .read-categories a {
-            background: #dd8a0d;
-            color: #fff;
-            padding: 3px 10px;
-            font-size: 12px;
-            border-radius: 3px;
-            text-transform: uppercase;
-        }
-        .read-title h4 {
-            font-size: 22px;
-            margin: 15px 0;
-            font-family: 'Lato', sans-serif;
-        }
-        .read-title h4 a { color: #222; }
-        .read-title h4 a:hover { color: #dd8a0d; }
-        .post-description p {
-            color: #666;
-            line-height: 1.6;
-            font-size: 15px;
-        }
-
-        /* Sidebar Widget */
-        .widget {
-            background: #fff;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .widget-title {
-            font-size: 18px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 15px;
-            margin-top: 0;
-            margin-bottom: 20px;
-            position: relative;
-        }
-        .widget-title::after {
-            content: "";
-            position: absolute;
-            left: 0; bottom: -2px;
-            width: 50px;
-            height: 2px;
-            background: #dd8a0d;
-        }
-        .search-form input[type="search"] {
-            width: calc(100% - 80px);
-            padding: 10px;
-            border: 1px solid #ddd;
-        }
-        .search-form input[type="submit"] {
-            width: 70px;
-            padding: 10px;
-            background: #222;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-        }
-        .widget_nav_menu ul {
-            list-style: none;
-            padding: 0; margin: 0;
-        }
-        .widget_nav_menu ul li {
-            border-bottom: 1px dashed #eee;
-            padding: 10px 0;
-        }
-        .widget_nav_menu ul li:last-child { border-bottom: none; }
-        .widget_nav_menu ul li a:hover { color: #dd8a0d; }
-
-        /* Footer */
-        .site-info {
-            background: #111;
-            color: #aaa;
-            text-align: center;
-            padding: 20px;
-            font-size: 14px;
-        }
-
-        /* --- TAMBAHAN FITUR: DESAIN POPUP MODAL --- */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: #fff; padding: 30px; border-radius: 8px; width: 90%; max-width: 500px;
-            position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .modal-close {
-            position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; color: #666;
-        }
-        .modal-close:hover { color: #d9534f; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
-        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .btn-submit { background: #dd8a0d; color: white; border: none; padding: 12px 20px; cursor: pointer; border-radius: 4px; width: 100%; font-size: 16px; font-weight: bold; }
-        .btn-submit:hover { background: #b87309; }
-    </style>
-</head>
-<body class="archive default-content-layout">
-
-    <header id="masthead" class="header-style1">
-        <div class="main-header">
-            <div class="container-wrapper">
-                <div class="site-branding">
-                    <p class="site-title"><a href="#">Aplikasi Sekolahku</a></p>
-                    <p class="site-description">Sistem Informasi Manajemen Terintegrasi untuk Sekolah, Madrasah, dan Yayasan Pendidikan. Mudah, Cepat, dan Akurat.</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="header-menu-part">
-            <div class="container-wrapper">
-                <nav class="main-navigation">
-                    <ul>
-                        <li><a href="#" class="aft-home-icon"><i class="fa fa-home"></i></a></li>
-                        <li><a href="#">Beranda</a></li>
-                        <li><a href="#">Modul Akademik</a></li>
-                        <li><a href="#">Keuangan & SPP</a></li>
-                        <li><a href="#">Kepegawaian</a></li>
-                        <li><a href="#">PPDB Online</a></li>
-                        <li><a href="#">E-Rapor</a></li>
-                        <li><a href="#">Kontak Kami</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </header>
-
-    <div id="content" class="content-area">
-        <main id="main" class="site-main">
-            <header class="header-title-wrapper1">
-                <h1 style="border-left: 4px solid #dd8a0d; padding-left: 15px;">Daftar Modul Aplikasi Terlengkap</h1>
-            </header>
-
-            <article class="archive-list-post">
-                <div class="read-img">
-                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=800&auto=format&fit=crop" alt="Akademik">
-                </div>
-                <div class="read-details">
-                    <div class="read-categories">
-                        <a href="#">1. e-SCHOOL (Akademik)</a>
-                    </div>
-                    <div class="read-title">
-                        <h4><a href="#">e-School: Aplikasi Sekolah & Madrasah Terintegrasi</a></h4>
-                    </div>
-                    <div class="post-description">
-                        <p>GAMBARAN UMUM: Modul utama yang menangani data siswa, jadwal pelajaran, kehadiran murid dan guru secara realtime, hingga pencetakan kartu ujian otomatis. Semua terintegrasi dalam satu *dashboard* cerdas.</p>
-                    </div>
-                </div>
-            </article>
-
-            <article class="archive-list-post">
-                <div class="read-img">
-                    <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=800&auto=format&fit=crop" alt="Keuangan">
-                </div>
-                <div class="read-details">
-                    <div class="read-categories">
-                        <a href="#">2. SIMKU (Keuangan)</a>
-                    </div>
-                    <div class="read-title">
-                        <h4><a href="#">Sistem Informasi Manajemen Keuangan & Pembayaran SPP</a></h4>
-                    </div>
-                    <div class="post-description">
-                        <p>Kelola seluruh arus kas sekolah, pembayaran SPP bulanan, uang gedung, hingga penyusunan Rencana Anggaran Belanja (RAB) sekolah secara transparan dan akuntabel. Dilengkapi fitur notifikasi tagihan ke WhatsApp orang tua.</p>
-                    </div>
-                </div>
-            </article>
-        </main>
-
-        <div id="secondary" class="sidebar-area">
-            <aside class="widget widget_search">
-                <h2 class="widget-title">Pencarian</h2>
-                <!-- TAMBAHAN: Mencegah error saat klik tombol cari -->
-                <form class="search-form" onsubmit="event.preventDefault(); alert('Fitur pencarian sedang dihubungkan ke database!');">
-                    <label>
-                        <input type="search" placeholder="Cari modul atau fitur..." />
-                    </label>
-                    <input type="submit" value="Cari" />
-                </form>
-            </aside>
-
-            <aside class="widget widget_nav_menu">
-                <h2 class="widget-title">Menu Cepat Admin</h2>
-                <ul>
-                    <!-- TAMBAHAN: Memberi ID dan fungsi klik agar menu berfungsi -->
-                    <li><a href="#" id="btn-ppdb"><i class="fas fa-user-plus"></i> Pendaftaran Siswa Baru (PPDB)</a></li>
-                    <li><a href="#" onclick="alert('Fitur Rekap Absensi sedang dikembangkan.')"><i class="fas fa-clipboard-list"></i> Rekap Absensi Harian</a></li>
-                    <li><a href="#" onclick="alert('Fitur Cetak Laporan sedang dikembangkan.')"><i class="fas fa-file-invoice-dollar"></i> Cetak Laporan Keuangan</a></li>
-                    <li><a href="#" onclick="alert('Fitur Kurikulum sedang dikembangkan.')"><i class="fas fa-book-open"></i> Manajemen Kurikulum Merdeka</a></li>
-                    <li><a href="#" onclick="alert('Pengaturan Aplikasi belum aktif.')"><i class="fas fa-cog"></i> Pengaturan Aplikasi</a></li>
-                </ul>
-            </aside>
-            
-            <aside class="widget">
-                <h2 class="widget-title">Statistik Sekolah</h2>
-                <div style="background: #f9f9f9; padding: 15px; border-left: 3px solid #dd8a0d;">
-                    <p style="margin:0 0 10px 0;"><strong>Total Siswa Aktif:</strong> 850</p>
-                    <p style="margin:0 0 10px 0;"><strong>Total Guru & Staf:</strong> 45</p>
-                    <p style="margin:0;"><strong>Tahun Ajaran:</strong> 2026/2027</p>
-                </div>
-            </aside>
-        </div>
-    </div>
-
-    <footer class="site-info">
-        <div class="container-wrapper">
-            Copyright &copy; 2026 "Tim Sekolahku" | Dikembangkan menggunakan arsitektur Vercel & Firebase.
-        </div>
-    </footer>
-
-    <!-- --- TAMBAHAN FITUR: KOTAK POPUP FORMULIR (Sembunyi secara default) --- -->
-    <div id="ppdbModal" class="modal-overlay">
-        <div class="modal-content">
-            <span class="modal-close" id="closeModal">&times;</span>
-            <h2 style="margin-top: 0; color: #dd8a0d; border-bottom: 2px solid #eee; padding-bottom: 10px;">Formulir PPDB</h2>
-            <form id="form-ppdb">
-                <div class="form-group">
-                    <label for="namaSiswa">Nama Lengkap Siswa</label>
-                    <input type="text" id="namaSiswa" required placeholder="Masukkan nama lengkap siswa">
-                </div>
-                <div class="form-group">
-                    <label for="asalSekolah">Asal Sekolah</label>
-                    <input type="text" id="asalSekolah" required placeholder="Contoh: SMP Negeri 1">
-                </div>
-                <button type="submit" class="btn-submit">Simpan Data Pendaftaran</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- SCRIPT FIREBASE & LOGIKA APLIKASI -->
-    <script type="module">
-       // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBIwS3TfnomxPq6bw3173OVzwD_gvJ-qsg",
-  authDomain: "sekolahku-a2cf6.firebaseapp.com",
-  projectId: "sekolahku-a2cf6",
-  storageBucket: "sekolahku-a2cf6.firebasestorage.app",
-  messagingSenderId: "285921284769",
-  appId: "1:285921284769:web:f2042b5bd2647d8989d6e0",
-  measurementId: "G-0NB6100FEY"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-        // --- MULAI LOGIKA APLIKASI ---
-
-        // 1. Logika untuk memunculkan Popup Formulir
-        const modal = document.getElementById("ppdbModal");
-        const btnPpdb = document.getElementById("btn-ppdb");
-        const spanClose = document.getElementById("closeModal");
-
-        // Saat menu "Pendaftaran Siswa Baru" diklik
-        btnPpdb.onclick = function(e) {
-            e.preventDefault();
-            modal.style.display = "flex";
-        }
-
-        // Saat ikon (X) diklik, tutup formulir
-        spanClose.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        // Tutup otomatis jika klik di luar area kotak putih
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-        // 2. Logika Menyimpan Data dari Formulir ke Database Firebase
-        const formPpdb = document.getElementById("form-ppdb");
-        formPpdb.addEventListener("submit", async function(e) {
-            e.preventDefault(); // Mencegah web ter-refresh saat klik tombol simpan
-            
-            // Ambil data yang diketik
-            const nama = document.getElementById("namaSiswa").value;
-            const asal = document.getElementById("asalSekolah").value;
-            const btnSubmit = formPpdb.querySelector(".btn-submit");
-            
-            // Beri efek loading di tombol
-            btnSubmit.textContent = "Menyimpan ke Database...";
-            btnSubmit.style.background = "#999";
-            btnSubmit.disabled = true;
-
-            try {
-                // Perintah mengirim data ke Firestore di Firebase
-                const docRef = await addDoc(collection(db, "siswa_baru"), {
-                    nama_lengkap: nama,
-                    asal_sekolah: asal,
-                    tanggal_daftar: new Date()
-                });
-                
-                alert("Sukses! Pendaftaran berhasil disimpan ke database Firebase.\nID Siswa: " + docRef.id);
-                
-                // Bersihkan formulir dan tutup popup
-                formPpdb.reset();
-                modal.style.display = "none";
-            } catch (error) {
-                console.error("Error Firebase: ", error);
-                alert("Gagal menyimpan data! Pastikan Anda sudah memasukkan KODE_API dari Firebase di kode script.");
-            } finally {
-                // Kembalikan tombol ke keadaan semula
-                btnSubmit.textContent = "Simpan Data Pendaftaran";
-                btnSubmit.style.background = "#dd8a0d";
-                btnSubmit.disabled = false;
-            }
-        });
-    </script>
-    <h2 style="margin-top: 30px;">Formulir Input Data Sekolah</h2>
-    <form id="form-sekolah">
-        <input type="text" id="nama-sekolah" placeholder="Nama Sekolah" required>
-        <input type="text" id="alamat-sekolah" placeholder="Alamat Sekolah" required>
-        <button type="submit" style="background: #dd8a0d; color: white; border: none; padding: 10px;">Simpan Data Sekolah</button>
-    </form>
-
-    <script type="module" src="js/js/sekolah.js"></script>
-
-</body>
-</html>
-<html lang="id">
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    ... (dan seterusnya sampai baris paling bawah) ...
-    } finally {
-            // Kembalikan tombol ke keadaan semula
-            btnSubmit.textContent = "Simpan Data Pendaftaran";
-            btnSubmit.style.background = "#dd8a0d";
-            btnSubmit.disabled = false;
-        }
-    });
-</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Sekolahku</title>
+    <!-- CSS Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Penyesuaian warna header seperti di gambar Anda */
+        .bg-header-custom { background-color: #4a4a4a; }
+        .bg-nav-custom { background-color: #2b2b2b; }
+        .text-orange { color: #f39c12; }
+    </style>
+</head>
+<body class="bg-light">
 
-<h2>Formulir Input Data Sekolah</h2>
-<form id="form-sekolah">
-    <input type="text" id="nama-sekolah" placeholder="Nama Sekolah" required>
-    <input type="text" id="alamat-sekolah" placeholder="Alamat Sekolah" required>
-    <button type="submit">Simpan Data</button>
-</form>
+    <!-- HEADER & JUDUL -->
+    <header class="bg-header-custom text-white py-4">
+        <div class="container">
+            <h1 class="text-orange fw-bold m-0">APLIKASI SEKOLAHKU</h1>
+            <p class="mb-0">Sistem Informasi Manajemen Terintegrasi untuk Sekolah, Madrasah, dan Yayasan Pendidikan.</p>
+        </div>
+    </header>
 
-<script type="module" src="js/js/sekolah.js"></script>
+    <!-- NAVIGASI & TOMBOL LOGIN DI ATAS -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-nav-custom">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">BERANDA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="akademik.html">MODUL AKADEMIK</a></li>
+                    <li class="nav-item"><a class="nav-link" href="keuangan.html">KEUANGAN & SPP</a></li>
+                    <li class="nav-item"><a class="nav-link" href="kepegawaian.html">KEPEGAWAIAN</a></li>
+                    <li class="nav-item"><a class="nav-link" href="ppdb.html">PPDB ONLINE</a></li>
+                    <li class="nav-item"><a class="nav-link" href="rapor.html">E-RAPOR</a></li>
+                </ul>
+                <!-- INI TOMBOL LOGIN PENDAFTARAN DI ATAS -->
+                <div class="d-flex">
+                    <a href="login.html" class="btn btn-warning fw-bold text-dark">Login Pendaftaran</a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
+    <!-- KONTEN UTAMA -->
+    <div class="container mt-4 mb-5">
+        <div class="row">
+            <!-- Kolom Kiri: Daftar Modul -->
+            <div class="col-md-8">
+                <h4 class="border-start border-warning border-4 ps-2 mb-4">Daftar Modul Aplikasi Terlengkap</h4>
+                
+                <!-- Modul 1 -->
+                <div class="card mb-3 shadow-sm">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <!-- Ganti src dengan gambar Anda -->
+                            <img src="https://via.placeholder.com/300x200" class="img-fluid rounded-start h-100 object-fit-cover" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <span class="badge bg-warning text-dark mb-2">1. E-SCHOOL (AKADEMIK)</span>
+                                <h5 class="card-title fw-bold">e-School: Aplikasi Sekolah & Madrasah Terintegrasi</h5>
+                                <p class="card-text text-muted small">GAMBARAN UMUM: Modul utama yang menangani data siswa, jadwal pelajaran, kehadiran murid dan guru secara realtime, hingga pencetakan kartu ujian otomatis.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modul 2 -->
+                <div class="card mb-3 shadow-sm">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="https://via.placeholder.com/300x200" class="img-fluid rounded-start h-100 object-fit-cover" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <span class="badge bg-warning text-dark mb-2">2. SIMKU (KEUANGAN)</span>
+                                <h5 class="card-title fw-bold">Sistem Informasi Manajemen Keuangan & Pembayaran SPP</h5>
+                                <p class="card-text text-muted small">Kelola seluruh arus kas sekolah, pembayaran SPP bulanan, uang gedung, hingga penyusunan Rencana Anggaran Belanja (RAB) sekolah secara transparan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kolom Kanan: Sidebar -->
+            <div class="col-md-4">
+                <!-- Pencarian -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h6 class="fw-bold border-bottom pb-2">Pencarian</h6>
+                        <div class="input-group mt-3">
+                            <input type="text" class="form-control" placeholder="Cari modul...">
+                            <button class="btn btn-dark" type="button">Cari</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menu Cepat Admin -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h6 class="fw-bold border-bottom pb-2">Menu Cepat Admin</h6>
+                        <ul class="list-unstyled mt-3">
+                            <li class="mb-2"><a href="ppdb.html" class="text-decoration-none text-dark">👤 Pendaftaran Siswa Baru (PPDB)</a></li>
+                            <li class="mb-2"><a href="absensi.html" class="text-decoration-none text-dark">📋 Rekap Absensi Harian</a></li>
+                            <li class="mb-2"><a href="laporan.html" class="text-decoration-none text-dark">📄 Cetak Laporan Keuangan</a></li>
+                            <li class="mb-2"><a href="kurikulum.html" class="text-decoration-none text-dark">📖 Manajemen Kurikulum Merdeka</a></li>
+                            <li class="mb-2"><a href="pengaturan.html" class="text-decoration-none text-dark">⚙️ Pengaturan Aplikasi</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+        <small>Copyright © 2026 "Tim Sekolahku" | Dikembangkan menggunakan arsitektur Vercel & Firebase.</small>
+    </footer>
+
+    <!-- JS Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
